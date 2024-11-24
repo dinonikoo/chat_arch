@@ -7,6 +7,7 @@
 #include <thread>
 
 using namespace std;
+
 void receive_messages(int client_socket);
 
 int main()
@@ -35,22 +36,19 @@ int main()
 
     cout << "Connected to server." << endl;
 
+    string name;
+    cout << "Please enter your name: ";
+    getline(cin, name);
+    send(client_socket, name.c_str(), name.length(), 0);
+    cout << "Now your name is " << name << ". Enter message (type 'exit' to quit): " << endl;
+
     thread receiver_thread(receive_messages, client_socket);
 
     // бесконечный цикл для ввода сообщений
     string message;
-    bool started = 0;
     while (true)
     {
-        if (!started) {
-            cout << "Please enter your name: ";
-            getline(cin, message);
-            send(client_socket, message.c_str(), message.length(), 0);
-            cout << "Now your name is " << message << ". Enter message (type 'exit' to quit): ";
-            started = 1;
-        }
-
-        getline(cin, message);  // используем getline для ввода строк с пробелами
+        getline(cin, message);
 
         // если пользователь вводит "exit", завершаем соединение
         if (message == "exit")
@@ -60,14 +58,14 @@ int main()
 
         // отправка сообщения серверу
         send(client_socket, message.c_str(), message.length(), 0);
-
-        
     }
+
     receiver_thread.join(); // Ожидание завершения потока
+
     // закрытие соединения
+    close(client_socket);
     return 0;
 }
-
 
 void receive_messages(int client_socket)
 {
