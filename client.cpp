@@ -35,7 +35,7 @@ int main()
 
     cout << "Connected to server." << endl;
 
-    thread receiver_thread(receive_messages, client_socket);
+   /* thread receiver_thread(receive_messages, client_socket);*/
 
     // бесконечный цикл для ввода сообщений
     string message;
@@ -63,8 +63,9 @@ int main()
 
         
     }
-    receiver_thread.join(); // Ожидание завершения потока
-    // закрытие соединения
+    thread receiver_thread(receive_messages, client_socket);
+    receiver_thread.detach(); // Поток работает независимо
+
     return 0;
 }
 
