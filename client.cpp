@@ -42,7 +42,7 @@ int main()
     send(client_socket, name.c_str(), name.length(), 0);
     cout << "Now your name is " << name << ". Enter message (type 'exit' to quit): " << endl;
 
-    thread receiver_thread(receive_messages, client_socket);
+    /*thread receiver_thread(receive_messages, client_socket);*/
 
     // бесконечный цикл для ввода сообщений
     string message;
@@ -60,10 +60,8 @@ int main()
         send(client_socket, message.c_str(), message.length(), 0);
     }
 
-    receiver_thread.join(); // Ожидание завершения потока
-
-    // закрытие соединения
-    close(client_socket);
+    thread receiver_thread(receive_messages, client_socket);
+    receiver_thread.detach(); // Поток работает независимо
     return 0;
 }
 
