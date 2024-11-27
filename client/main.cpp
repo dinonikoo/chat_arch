@@ -22,7 +22,7 @@ int main()
     // установка адреса и порта сервера
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(12345);                    // порт 12345
+    serverAddr.sin_port = htons(8080);                    // порт 8080
     inet_pton(AF_INET, "127.0.0.1", &serverAddr.sin_addr); // адрес сервера (localhost)
 
     // установка соединения с сервером
