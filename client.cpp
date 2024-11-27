@@ -27,7 +27,7 @@ int main()
     inet_pton(AF_INET, "127.0.0.1", &serverAddr.sin_addr); // адрес сервера (localhost)
 
     // установка соединения с сервером
-    if (connect(client_socket, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1)
+    if (connect(client_socket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == -1)
     {
         cerr << "ERROR: cannot connect to server" << endl;
         close(client_socket);
@@ -42,7 +42,7 @@ int main()
     send(client_socket, name.c_str(), name.length(), 0);
     cout << "Now your name is " << name << ". Enter message (type 'exit' to quit): " << endl;
 
-    /*thread receiver_thread(receive_messages, client_socket);*/
+    thread receiver_thread(receive_messages, client_socket);
 
     // бесконечный цикл для ввода сообщений
     string message;
@@ -60,8 +60,10 @@ int main()
         send(client_socket, message.c_str(), message.length(), 0);
     }
 
-    thread receiver_thread(receive_messages, client_socket);
-    receiver_thread.detach(); // Поток работает независимо
+    receiver_thread.detach(); // ожидание завершения потока
+
+    // закрытие соединения
+    close(client_socket);
     return 0;
 }
 
